@@ -36,7 +36,6 @@ class MoneyTransferTest {
 
     @AfterEach
     void tearDown() {
-        // если надо — можно будет сбрасывать состояние
     }
 
     @Test
