@@ -1,4 +1,3 @@
-
 plugins {
     id 'java'
 }
@@ -19,7 +18,6 @@ dependencies {
     testImplementation 'com.codeborne:selenide:6.12.2'
     testImplementation 'com.github.javafaker:javafaker:1.0.2'
     testImplementation 'io.qameta.allure:allure-selenide:2.21.0'
-
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
@@ -30,4 +28,7 @@ test {
     useJUnitPlatform()
     systemProperty 'selenide.headless', System.getProperty('selenide.headless')
     systemProperty 'file.encoding', 'UTF-8'
+    systemProperty 'chromeoptions.prefs', System.getProperty('chromeoptions.prefs', "profile.password_manager_leak_detection=false")
+
+    systemProperty 'webdriver.chrome.driver', 'C:/Users/Kory Kory/.cache/selenium/chromedriver/win64/139.0.7258.128/chromedriver.exe'
 }
