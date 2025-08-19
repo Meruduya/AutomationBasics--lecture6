@@ -1,7 +1,6 @@
 package ru.netology.web.test;
 
 import com.codeborne.selenide.Configuration;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import ru.netology.web.data.DataHelper;
 import ru.netology.web.page.DashBoardPage;
@@ -20,15 +19,14 @@ class MoneyTransferTest {
 
     @BeforeEach
     void setup() {
-        WebDriverManager.chromedriver().setup();
         Configuration.holdBrowserOpen = true;
         open("http://127.0.0.1:9999");
 
         var authInfo = DataHelper.getAutoInfo();
-        var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
         var loginPage = new LoginPage();
-        loginPage.validLogin(authInfo);
-        dashboardPage = loginPage.validVerify(verificationCode);
+        var verificationPage = loginPage.validLogin(authInfo);
+        var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+        dashboardPage = verificationPage.validVerify(verificationCode);
 
         firstCard = DataHelper.getFirstCardInfo();
         secondCard = DataHelper.getSecondCardInfo();
@@ -41,7 +39,7 @@ class MoneyTransferTest {
     }
 
     @Test
-    //  Перевод денег с первой карты на вторую
+        // Перевод денег с первой карты на вторую
     void shouldTransferMoneyFromFirstCardToSecond() {
         int amount = 1000;
 
@@ -53,9 +51,9 @@ class MoneyTransferTest {
     }
 
     @Test
-    // Перевод денег со второй карты на первую
+        // Перевод денег со второй карты на первую
     void shouldTransferMoneyFromSecondCardToFirst() {
-        int amount = 1000;
+        int amount = 1500;
 
         var transferPage = dashboardPage.selectCard(firstCard);
         dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), secondCard);
@@ -65,19 +63,18 @@ class MoneyTransferTest {
     }
 
     @Test
-    //  Перевод суммы больше остатка
+        // Перевод суммы больше остатка
     void shouldGetErrorWhenTransferringMoreThanAvailable() {
-        int amount = initialBalance1 + 1;
-
+        int amount = initialBalance1 + 1; // на 1 рубль больше, чем есть
         var transferPage = dashboardPage.selectCard(secondCard);
         transferPage.makeValidTransfer(String.valueOf(amount), firstCard);
         transferPage.findErrorMessage("Выполнена попытка перевода суммы, превышающей остаток на карте списания");
     }
 
     @Test
-    // Перевод отклоняется из-за превышения лимита средств, а баланс остаётся тем же
+        // Перевод отклоняется из-за превышения лимита средств, а баланс остаётся тем же
     void shouldKeepBalanceUnchangedAfterFailedTransfer() {
-        int amount = initialBalance1 + 1000;
+        int amount = initialBalance1 + 500; // заведомо больше, чем доступно
 
         var transferPage = dashboardPage.selectCard(secondCard);
         transferPage.makeValidTransfer(String.valueOf(amount), firstCard);
@@ -89,25 +86,12 @@ class MoneyTransferTest {
     }
 
     @Test
-    // Перевод 0 рублей
+        // Перевод 0 рублей
     void shouldTransferZeroAmount() {
         var transferPage = dashboardPage.selectCard(secondCard);
         dashboardPage = transferPage.makeValidTransfer("0", firstCard);
 
         assertEquals(initialBalance1, dashboardPage.getCardBalance(firstCard));
         assertEquals(initialBalance2, dashboardPage.getCardBalance(secondCard));
-    }
-
-    @Test
-    // Проверка баланса через доменные методы
-    void shouldUseDomainMethodToVerifyBalance() {
-        int amount = 1500;
-
-        var transferPage = dashboardPage.selectCard(secondCard);
-        dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), firstCard);
-
-        dashboardPage
-                .shouldHaveBalance(firstCard, initialBalance1 - amount)
-                .shouldHaveBalance(secondCard, initialBalance2 + amount);
     }
 }

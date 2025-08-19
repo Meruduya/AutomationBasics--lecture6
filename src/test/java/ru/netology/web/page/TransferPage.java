@@ -1,4 +1,3 @@
-
 package ru.netology.web.page;
 
 import com.codeborne.selenide.Condition;
@@ -28,6 +27,7 @@ public class TransferPage {
 
     // Метод для проверки ошибки (для негативного теста)
     public void findErrorMessage(String expectedText) {
-        errorNotification.shouldHave(Condition.text(expectedText));
+        errorNotification.shouldBe(Condition.visible)   // проверяем, что сообщение отображается
+                .shouldHave(Condition.text(expectedText)); // и что текст совпадает
     }
 }
