@@ -1,6 +1,7 @@
 package ru.netology.web.test;
 
 import com.codeborne.selenide.Configuration;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import ru.netology.web.data.DataHelper;
 import ru.netology.web.page.DashBoardPage;
@@ -19,6 +20,7 @@ class MoneyTransferTest {
 
     @BeforeEach
     void setup() {
+        WebDriverManager.chromedriver().setup();
         Configuration.holdBrowserOpen = true;
         open("http://127.0.0.1:9999");
 
