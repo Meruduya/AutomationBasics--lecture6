@@ -39,9 +39,9 @@ class MoneyTransferTest {
     }
 
     @Test
-        // Перевод денег с первой карты на вторую
+// Перевод денег с первой карты на вторую
     void shouldTransferMoneyFromFirstCardToSecond() {
-        int amount = 1000;
+        int amount = Math.max(1, initialBalance1 / 4);
 
         var transferPage = dashboardPage.selectCard(secondCard);
         dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), firstCard);
@@ -51,9 +51,9 @@ class MoneyTransferTest {
     }
 
     @Test
-        // Перевод денег со второй карты на первую
+// Перевод денег со второй карты на первую
     void shouldTransferMoneyFromSecondCardToFirst() {
-        int amount = 1500;
+        int amount = Math.max(1, initialBalance2 / 4);
 
         var transferPage = dashboardPage.selectCard(firstCard);
         dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), secondCard);
