@@ -24,8 +24,9 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
-test {
-    useJUnitPlatform()
-    systemProperty 'selenide.headless', System.getProperty('selenide.headless', "true")
-    systemProperty 'file.encoding', 'UTF-8'
-}
+    test {
+        useJUnitPlatform()
+        systemProperty 'selenide.headless', System.getProperty('selenide.headless')
+        systemProperty 'file.encoding', 'UTF-8'
+        systemProperty 'chromeoptions.prefs', System.getProperty('chromeoptions.prefs', "profile.password_manager_leak_detection=false")
+    }
